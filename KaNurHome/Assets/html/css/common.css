@@ -1,0 +1,158 @@
+﻿/* commons */
+html, body {
+    padding: 0;
+    margin: 0;
+    font-size: 25px;
+    width : 100%;
+    /*height: 100%;*/
+}
+/* contents */
+#content_top{
+    width: 100%;
+    background-color: #009688;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: #fff;
+    box-shadow : 0px 5px 5px #bbb;
+    z-index: 10;
+}
+#content_main{
+    background-color: #fff;
+    color: #000;
+    z-index: 1;
+    width: 100%;
+}
+
+
+.card_button{
+    box-shadow: 0px 0px 5px 3px #bbb;
+    border-radius: 5px;
+    width : 98%;
+    margin : 1%;
+    cursor:pointer;
+}
+.circle_button{
+    box-shadow: 0px 0px 5px 3px #bbb;
+    border-radius: 100%;
+    background-color : rgb(127, 127, 127);
+    overflow: hidden;
+    width : 70px;
+    padding: 10px;
+    cursor:pointer;
+}
+.circle_button img{width : 100%;}
+
+.toggle_button{
+    background-color : #1abc9c;
+    border-radius : 20px 20px 20px 20px;
+    box-shadow: 0px 0px 3px 2px #555;
+    color: #000;
+    margin: 5px 5px;
+    margin-bottom: 0px;
+    padding: 5px 15px;
+    float: left;
+    position: relative;
+    display:block;
+    overflow: hidden;
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+
+    cursor:pointer;
+}
+
+            
+/* ripple effect */
+.ripple_target{
+    position: relative;
+    overflow: hidden;
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor:pointer;
+}
+.ripple_target div{
+    pointer-events : none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+.ripple_effect{
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0;
+    pointer-events : none;
+    transform: scale(0);
+    background: #e67e22;
+}
+.ripple_effect.is_show{
+    animation: ripple 0.75s ease-out;
+}
+@keyframes ripple{
+    from{
+        opacity: 1;
+    }
+    to{
+        transform : scale(2);
+        opacity : 0;
+    }
+}
+
+/* tools */
+.font_s{font-size: 20px;}
+.font_m{font-size: 25px;}
+.font_l{font-size: 30px;}
+.font_x{font-size: 35px;}
+
+.fl{float: left;}
+.fr{float: right;}
+.clr{clear:both;}
+
+.margL_5{margin-left: 5px}
+.margL_10{margin-left: 10px}
+.margL_15{margin-left: 15px}
+.margL_20{margin-left: 20px}
+
+.margT_5{margin-top: 5px;}
+.margT_10{margin-top: 10px;}
+.margT_15{margin-top: 15px;}
+.margT_20{margin-top: 20px;}
+
+.margB_5{margin-bottom: 5px;}
+.margB_10{margin-bottom: 10px;}
+.margB_15{margin-bottom: 15px;}
+.margB_20{margin-bottom: 20px;}
+
+.pad_5{padding: 5px;}
+.pad_10{padding: 10px;}
+.pad_15{padding: 15px;}
+.pad_20{padding: 20px;}
+
+.layer_1{z-index:1;}
+.layer_2{z-index:10;}
+.leyer_3{z-index: 20;}
+
+.color_base{
+    background-color: #fff;
+    color: #000;
+}
+.color_main{
+    background-color: #1abc9c;
+    color: #fff;
+}
+.color_sub{
+    background-color: #d35400;
+    color: #fff;
+}
+
+.shadow_all{box-shadow: 0px 0px 5px 3px #bbb;}
+
+.ovhid{overflow:hidden;}
+.disnon{display:none; }
+.text_center{text-align: center;}

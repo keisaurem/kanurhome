@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="file:///android_asset/html/css/common.css" />
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/common.js"></script>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            setScrollContentTop();
+            
+            //$(document).on("mousedown", ".toggle_button", function (e) {
+            //    animateToggleButton($(this),
+            //        function () {
+            //            // on
+            //            Android.ToggleKeyword($(this).Text(), true);
+            //        },
+            //        function () {
+            //            // off
+            //            Android.ToggleKeyword($(this).Text(), false);
+            //        }
+            //    );
+            //});
+
+            $(document).on("mousedown", ".card_button", function (e) {
+                var $this = $(this);
+                animateRipple($this, e,
+                    function () {
+                        // callback
+                        Android.SelectItem($this.attr("id"));
+                    }
+                );
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="content_top">
+        
+    </div>
+    <div id="content_main">
+        <div id="home_list">
+
+        </div>
+    </div>
+</body>
+</html>

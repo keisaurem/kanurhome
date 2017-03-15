@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="file:///android_asset/html/css/common.css" />
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/common.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBCElElDfo4cvawdw0A98ILd7tQobG7DeQ"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/gmaps.js"></script>
+
+    <style type="text/css">
+        #map_button{
+            position: fixed;
+            right: 30px;
+            top: 0;
+        }
+        .icon{
+            width: 70px;
+        }
+        #streetview{
+            width : 100%;
+            height: 300px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            var headH = $("#content_top").height();
+            var btnH = $("#map_button").height();
+            $("#map_button").css("top", headH - btnH);
+
+            $(document).on("mousedown", "#map_button", function (e) {
+                animateRipple($(this), e,
+                    function () {
+                        // callback
+                        Android.SelectItem($("#target_id").text());
+                    }
+                );
+            });
+
+            var latval = $("#lat").text();
+            var lngval = $("#lng").text();
+            var map = new GMaps({
+                div: "#streetview",
+                lat: latval,
+                lng: lngval,
+                zoom: 14
+            });
+            var test = map.createPanorama({
+                el: "#streetview",
+                lat: latval,
+                lng: lngval
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="content_top" style="color: #fff;">
+        <div id="streetview"></div>
+        <div class="font_s">※ストリートビューは必ずしも指定場所の前とは限りません</div>
+        <div id="map_button" class="ripple_target circle_button leyer_3">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABICAIAAADu9uUMAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwwAADsMBx2+oZAAABu1JREFUeF7tm/dTFEsUhfnLWUVAJIMoQYqoqIAoBkCM5LQlZVYQRYwFKEFgDeh7x94Dzvb2zHRP91pLvff9BNwwfSZ039sz5MT+Y/wv2DWFhYXxePzXr1//aPPixYuKigrGuyazgmtqalZXV6nDhJ2dnfb2dmZxSgYF19fXY9xUYM7Pnz+7u7uZyx2ZElxdXb21tcWxRwWaz5w5w4yOyIjg/Pz8lZUVjtqORCJRVVXFvC7IiOCpqSmO1wVLS0uHDh1iamvcC66trcWtyMH6s7u7u7Gx8f37d/4eyMWLF5ndGveCnz17xmH6sLm52dPTc+TIETgfPny4ra3tw4cPtPmwtrYGz2R+SxwLrqysDF5ysUqVlJTQew+Ix9pLDx86OzvpbYdjwXfu3OEAVeBc1NXV0TWVoqKi7e1t+ql4/vw5Xe1wLPj9+/ccoIr5+Xn6qRgaGqKfih8/fmDyp6sFLgUfPXo0eLoaGBigq4qmpib6+dDc3ExXC1wKDh1xV1cXXVWgVqGfD8HnSxOXgrF4cGg+XL16la4qGhoa6OcDlne6WuBS8ODgIIfmw4MHD+iqAheQfj48fPiQrhb8VcEoM8rKyuidCpbZ0GrUyUT9VwWDhYWFvLw8BngYHx+nhz+PHj2itwUuBV+5coVDC+TVq1fHjx9nTCxWXFw8OztLWyDxeJwxFrgU3NHRwaGFgQrk3bt3T548WVxcxALLv4aBqoZHssCl4BMnTnBomcFJC+FSMB5O9EAcXQaor6/nkSxwKRiE9j2RwalMNliWOBY8MzPDAboGzzyPYYdjwd3d3Ryga7Bu8Rh2OBaMXtdoC1qf06dP8xh2OBYMgjvEaKBEc9IbAveCg/cAouGq+wfGgs+fP9+fhnfD6eTJkxymO6QVGL/ywCagEETHbiYYAcp9xpaWFnrEYrm5ucvLyzS4AKUYjsvssdixY8d0dkXTSTZbZoLR0DI6lenpaXoIbt26RYMLUIEyr6C3t5cGQ1pbWxFuJthvQtra2vLe1eXl5Q7n6rNnzzKvIHR/U8na2lpyN99AMCo7RquQlo1ow0pnc3PTeyqx7EW7n/cbDwPBUhWFBxXN7T7Xr1+nnwBzG/3sGB4eZkYBGjIeL5DXr18zXoDbbf+Fs65gLINfv35lApGisrKSNhW4LBsbG/SOCi4mng5mNOHChQtMIcApoEFf8KVLlxgt8Kbww37qevr0KXMZ8vLlS6YQeN8z6wp+8+YNowXBG65JsH5ovivzo6mpiblMkF737OzseNssLcHo7L0pMCcr96XSicfjjDEncnt09+5dphBIS6aW4ImJCUYLxsbGaAijqqoq2qQKMO0xiwlYe9bX15lCIG0bhAvG/eB9zYVL7d2CCwX1DSNNWFlZifYSvK2tjSkEHz9+pGGPcMFSi4sZnwY9UFp7HwdNIm9fSecXJTQNe4QLlma8CENBbchgPT59+uQtNvQpKiry7oHiZ0yctO0RIri6utp7fRKJRIS+1PQiR768165dYwrB48ePafAQInhkZITRAmnG00f/SY789KJLk0p95SZJkGDcV1++fGG0oLa2ljZDcKdoTteRP23A2JhCgDpPeeKCBJ87d47RAst9Q5012eYQk5OTzCKQivB9ggTPz88zWnD58mUaIlFaWvrt2zfmUoHn3LuRYAQKIWnt9PuczVcwqnbvTYixFhQU0BaV4O0um40rlLrMIlhcXKQhDV/B0uDu3btHgwU4ZehvmTGV3d3dmpoa+pkj3YwB87xacHqBdurUKdrswFCYMRU8gfQwR7oZ0cYGrJ1qwZjQGS1IL9BskBovgMfPu01nyu3bt5lIEPwaWS0YjSijBX19fTS4oKGhQapDLKfDz58/M5GgsbGRBhUKwSUlJd63nuhpUbLR5gjvEvX27dtolUaS5uZmJhIsLy/T4INC8I0bNxgtuH//Pg3uwBlMfj6OZ8/yrS+GlxxnEmlrLR2FYNTujBY4+f4tnZ6eHiS3matAYWGhd1MFN2b6l6sSsuDW1lZGC1ZXV2nIAFjqLNd26TManT0wWbBU5Q8ODtKQfaBbwPPPgQo6Ojpo8ydFMLpHbz+JO6S4uJi27EP6hgZ9jk4XnSK4v7+f0QJlP5k9SN+yjY6O0hBIimDprV+G/lXKCbiY3n8TwsKuudP2RzDWa0YL9t8+ZSdS67q0tERDGH8EY85ktAD1Gg1ZCVorDlTQ29tLQxgUjFLW26yiHvD77DUbQGsduXWlYOlNt8NvKjKBVAvOzs7SoAEFS80g9KPnylqkL6uNXkH9FozZmKEHENNa8LdgaWvyYHHz5s2kEk1yDvTlxdSFCYxS9MhJJBKMPoDMzc1RhzY5DD2YoPygDm0OtmDjYiEW+xc+QPP1AoGDFQAAAABJRU5ErkJggg==" />
+            <span class="ripple_effect"></span>
+        </div>
+    </div>
+    <div id="content_main">
+
+
+
+        <div id="disaster_prevention_data">
+            <div id="disaster_prevent_wrapper" class="pad_15 ovhid">
+                <div class="fl pad_10">
+                    <img class="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAoCAIAAADmAupWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASsSURBVGhD7ZnJL3ttFMevITGE6koJESUSU9hpbZAYFq9EQkKQGBI2/gESK7EwD5EQC1athBX+AaG1sTDVSkIkhFBiiJin/o7nftv33tuLtveafu/7WZ3hOec5J733GW79HA4H95lsbm4uLS3ZbDYS9vb27Hb7xcXF8/MzuQICArRarU6ni4uLS05OzszMNBgMKSkpfOBnQQ2rzvHxcVtbW1JSEubwEgqkcEqCdKqicsODg4MREREoXDEajWZgYACpVUK1huvr61HmJ1BXV4dpFKNCw42NjahLjrCwsPLy8qGhIYvFcnR0hBgBZLRarTSAhtFghMnR0NCAGAUoanhiYgK1uGE0Gk0mE8Z5idlszs7ORiI3yItxPuF7w28tp93d3RihGEqFpGJoSccI7/Gl4dXVVcwsZnJyEiNUZWpqChOIWVlZwQhv8LphWjYxoYDOzk64Pw2aApMJ6O/vh9tjvGvYfSnW6/XwfQkJCQmY2Im3C7gXDZeWlmISJ+3t7fB9ITQppndChcHnAZ42XF1djfROlpeX4ftyaGoU4aSyshK+j/CoYTroIbGT8/Nz+L4JOpCjFCdUJHzv8nHD8/PzSOnk8fERvm+FykBBTubm5uB7mw9uS+T19/eHwri8vAwPD4fy3VxdXUmKoXuYpGAJ7/mIyMhISIyNjY2f0y1BR1EqCQpDUrAM7HeWp6urC4MYvb29cPww+vr6UCKjo6MDDjneaxgJGGlpabD+SNLT01EoA1Y53vQVFhYimgGrYmh1pesRXe4JEkiFQzEolJGfnw+rG/KdUCkIZQwPD8OhmKKiIiRlkAqHYkZGRpCUIXsVJeQbzsvLQxz78gSrGlRUVCAvg1Q41CAwMBB5OS43NxdWMTKrNO1vCwsLUDhuenoa0o9ndnYWEsdZLBb3jZqQabilpQUSx4WEhJSUlEBRg9DQUEgMiaqQ4uJiKhgKxzU3N0MSIHPw8PPzg8RxtbW1NTU1tL9D94zb21s60AcHB/MqFaHT6UigR+7w8PDm5oa3E9RwdHT009MTyXa7nQJ5+93d3czMjLB6T6Bt2Ww2m0wm6GytheSCPdj/sra2Bocydnd3kdF9yrdBgMNB4TApw/0jgfSRHhsbg6QM4frhAwrDXYyPj0NygcadaLVaOJSxv7+PjD79whQOkzKoHWR0In2HhS8wvWD8fyLecn9/TxXHxMTwqjDn+7iKOTg4iI2NDQoK4lWvoKfj+voaiiAnj6jhxcXFnJwcKG5DfYY2Nn750Wg0ra2tVquVtxM0HR196QZGMq1YZWVlvF0hdHZ4eXnhZdqfhE2JHmnhZ9GCggJYVUXy5YRUOFRFeC6WfGAULVrr6+uQOM5gMEBSFX4HciFR1SIrKwsSx9lsNkgMUcNbW1uQOC41NRWSqjw8PEBiSFS1oLsdJHFThKhh4dqo1+shqYrRaKSrzD8MEkiFQ1Xi4+MhiZsiXhetnp4e+t1pBR8dHSWVd2xvbycmJvLyr2NnZ8dVPO0RTU1NdA/NyMh4PTVXVVXxDgknJyfsJf+VUPFoQww1++YOSWGQfieeb/7/85fBX9z+I7x+xD07O4uKioLhr4baPD09/QMEOFvyMsigMAAAAABJRU5ErkJggg==" />
+                </div>
+            </div>
+        </div>
+
+
+        <div id="hospital_data">
+            <div id="hospitaldata_wrapper" class="pad_15 ovhid">
+                <div class="fl pad_10">
+                    <img class="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHoAAAB3CAIAAABDpcNtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7dy7L2xrHMZxlUgUIiduiZ6WgkQwimkwJkKBxCUojMQl0UgkIhJO42gkdIgolFqdxD9AQ3Jymi00Q4aZaFT7nN/OerLNsWbeub3zW8t4PuWs9zbfPba5Rdm/fnJ5eVlm1dXVFZb2Bx/l7uvrQySrQqEQNvABX+S+v79Hm6J5eHjAZp7yPvf6+jqSFNnGxga29I7HuRsaGhBDRWNjIzb2iGe5j4+P0UDdyckJDqHOm9zX19eRSGR7e/tPdVtbW7L1zc0NjqLLF78qvw/mVuVN7ouLC/m5/ssjsrUcAEfR5U3ukZER/NryiBwAR9HlTe6ZmRncb4/IAXAUXcytirlVMbcq5lb1lXKfnZ1hfpL9/X1czgVzZ3ZwcID5SeRJNC7ngrkzY+48Mbcq5lbF3KqYW1V+uff29jA/yebmJi7ngrmhpqYmGAx2u7S0tJyfn2N+ktPT09bWVgxKIotUV1djURfmhunpaQwq2ODgIBZ1YW4YGxvDoIL19vZiURfmBua2j7lVMbcqQ+7x8XEMKlh/fz8WdWFuCIVC0Wj0b5fb29t4PI75SWKx2N3dHQYleXp6CgQCWNSFuTPb2dnB/CRra2u4nAvmzqyUX8S/vLzIa7MBe+Rl3uHhobO4f3LLkeRgOKINEi3lf3qOtLlxLqsWFhacxf2TW46Em6xyFndLfQGTbFtZWXHW909uORJuss1Z/5MUt5aXl2OGbd8qd0VFhbNFss+5a2trMbwIvlVuUV9f7+zy2/9yNzU1YWBxFJj76OjImZ5sd3cXl3Ohk1s0Nzc7Gzk+cnd0dGBI0RSYe3R0VJ5I7CeRf4BwOIzLuVDLLTo7O529BHLnd+hcFZjbIs3cYnh42NnuV+65uTncXGTfNreYn5+X7X4lwA3FNzs769xJ/+SWI+Gm4ltdXS17fHx8U5FIJN7f35076Z/cciQ5GI5YZJL68xNBHf7Jrcyb3JFIBPfbI3IAHEUXticiIiIiIiKiL6u9vf3t7e2HUTweHxoawoRUgsFgIpHA6DSsLCIDZBgmpCJbyEYYnUbGRaampl5fXzE6DYkm6TAhe4FAAG+rGMkJMCGVcDiMcUZWFjF/ICVbYJyReZGlpSWMMzJ8NzGtrq4uzDaamJjAhFSy/IOgVhaRYZiQimyBcUbmRX5/LclM0mFC9pjbjbk/MDdzZ4253Zj7A3Mzd9aY2425P3zt3N3d3ZhtNDk5iQmpDAwMYJyRlUVkGCakIltgnJF5kcXFRYwzknSYkD3nRfxPIxlgfmA6pTA6DVuLmEs5j26MTiPjIs6jG6PTkAH5vIgnIiIiIiIqMT09PfICKSPzp7olJsuPhiUdJmTPynsmJaaI75lYeUewxPj9DdgSw9yqmFsVc6tiblXMrYq5VTG3qiLmtvL97hKzvLyMu22Uz0fDbW1tsVjsH6Pn52fDH9zPT11d3R+WyFJY1BL5UY5Go7jzaUg0SYcJPldVVYVHiCWyIJYmt8rKSnSyRBbE0uTG3KqYWxVzq2JuVcytirlVMbcq5lbF3KqYWxVzq2JuVcytirlVMbcq5lbF3KqYWxVzq2JuVcytirlVMbeqEs9dVvYfqETlK0t9eNYAAAAASUVORK5CYII=" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="latlng" class="disnon">
+
+    </div>
+</body>
+</html>

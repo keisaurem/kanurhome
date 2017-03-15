@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="file:///android_asset/html/css/common.css" />
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/common.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBCElElDfo4cvawdw0A98ILd7tQobG7DeQ"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/gmaps.js"></script>
+
+    <style type="text/css">
+        #map{
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+
+        $(function () {
+            var wh = $(window).height();
+            var headH = $("#content_top").height();
+            $("#map").css({
+                height: wh - headH - 20
+            });
+            var latval = $("#lat").text();
+            var lngval = $("#lng").text();
+            var map = new GMaps({
+                div: "#map",
+                lat: latval,
+                lng: lngval,
+                zoom: 18
+            });
+            map.addMarker({
+                lat: latval,
+                lng: lngval,
+                infoWindow: {
+                    content: $(".nursinghomename").text()
+                }
+            });
+            $(".sublat").each(function (item) {
+
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="content_top">
+
+    </div>
+    <div id="content_main">
+        <div id="wrap_map" class="card_button">
+            <div id="map"></div>
+        </div>
+    </div>
+    <div id="latlng" class="disnon">
+
+    </div>
+</body>
+</html>

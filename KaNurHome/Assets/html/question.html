@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="file:///android_asset/html/css/common.css" />
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="file:///android_asset/html/js/common.js"></script>
+
+    <style type="text/css">
+        .card_button{
+            width: 80%;
+            margin: 5%;
+            padding: 5%;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+
+            $(document).on("mousedown", ".card_button", function (e) {
+                $this = $(this);
+                animateRipple($this, e,
+                    function () {
+                        // callback
+                        Android.SelectItem($this.attr("id"));
+                    }
+                );
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="content_top">
+        <div id="wrap_question" class="pad_20">
+            <div id="question_title">次のうちから1つ、選択してください</div>
+        </div>
+    </div>
+    <div id="content_main">
+        <div id="wrap_answers">
+
+        </div>
+        <div id="exec_search" class="disnon">
+            <div id="255" class="card_button ripple_target margB_20 color_main">
+                <div class="pad_15">
+                    <div class="font_x">今まで選択した条件で検索する</div>
+                </div>
+                <span class="ripple_effect"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
