@@ -9,61 +9,55 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using KaNurHome.enums;
 
 namespace KaNurHome.attributes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using Android.App;
-    using Android.Content;
-    using Android.OS;
-    using Android.Runtime;
-    using Android.Views;
-    using Android.Widget;
-    using KaNurHome.enums;
-
-    namespace KaNurHome.attributes
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
+    public class NursingTypeAttribute : Attribute
     {
-        [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
-        public class NursingTypeAttribute : Attribute
+        private NursingCategories[] _categories;
+        public NursingCategories[] Categories
         {
-
-            private string _Text;
-            public string Text
+            get
             {
-                get
-                {
-                    return _Text;
-                }
+                return _categories;
             }
+        }
 
-            private string _CsvName;
-            public string CsvName
+        private string _Text;
+        public string Text
+        {
+            get
             {
-                get
-                {
-                    return _CsvName;
-                }
+                return _Text;
             }
+        }
 
-            private string _Icon;
-            public string Icon
+        private string _CsvName;
+        public string CsvName
+        {
+            get
             {
-                get
-                {
-                    return _Icon;
-                }
+                return _CsvName;
             }
+        }
 
-            public NursingTypeAttribute(string text, string csvName, string icon)
+        private string _Icon;
+        public string Icon
+        {
+            get
             {
-                this._Text = text;
-                this._CsvName = csvName;
-                this._Icon = icon;
+                return _Icon;
             }
+        }
+
+        public NursingTypeAttribute(string text, string csvName, string icon, params NursingCategories[] categories)
+        {
+            this._Text = text;
+            this._CsvName = csvName;
+            this._categories = categories;
+            this._Icon = icon;
         }
     }
 }

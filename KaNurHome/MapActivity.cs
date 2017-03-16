@@ -10,11 +10,12 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using KaNurHome.models.layouts;
+using KaNurHome.models.xmls;
 
 namespace KaNurHome
 {
-    [Activity(Label = "NursingHomeActivity")]
-    public class NursingHomeActivity : Activity
+    [Activity(Label = "MapActivity")]
+    public class MapActivity : Activity
     {
         //レイアウト
         private WebViewWrapper lay = new WebViewWrapper(Application.Context);
@@ -22,8 +23,12 @@ namespace KaNurHome
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
 
+            var xMap = new XMapHtml(Application.Context);
+            xMap.SetSelectedItem(ListActivity.SelectedItem);
+
+            SetContentView(lay.Layout);
+            lay.SetHtml(xMap);
         }
     }
 }

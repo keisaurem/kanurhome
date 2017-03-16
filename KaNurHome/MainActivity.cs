@@ -1,12 +1,13 @@
 ﻿using Android.App;
 using Android.Widget;
 using Android.OS;
-using KaNurHome.models.layouts;
 using Android.Content;
+using KaNurHome.models.layouts;
 
 namespace KaNurHome
 {
-    [Activity(Label = "KaNurHome", MainLauncher = true, Icon = "@drawable/icon")]
+
+    [Activity(Label = "KaNurHome", MainLauncher = true, Icon = "@drawable/icon", NoHistory = true)]
     public class MainActivity : Activity
     {
         //レイアウト
@@ -16,9 +17,9 @@ namespace KaNurHome
         {
             base.OnCreate(bundle);
 
-            lay.JSInterface.Submit += () =>
+            lay.JSInterface.SelectedItem += itemID =>
             {
-                var intent = new Intent(Application.Context, typeof(NursingHomeActivity));
+                var intent = new Intent(Application.Context, typeof(QuestionActivity));
                 StartActivity(intent);
             };
 

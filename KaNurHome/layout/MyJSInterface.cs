@@ -10,15 +10,13 @@ namespace KaNurHome.models.layouts
         public delegate void SelectItem(string itemId);
         public event SelectItem SelectedItem;
 
-        public delegate void SubmitVoid();
-        public event SubmitVoid Submit;
-
         private Context _context;
         public MyJSInterface(Context context)
         {
             this._context = context;
         }
-        
+
+        /* commons */
         [Export("ViewToast")]
         [JavascriptInterface]
         public void ViewToast(Java.Lang.String message)
@@ -31,13 +29,6 @@ namespace KaNurHome.models.layouts
         public void SelectItemID(Java.Lang.String itemId)
         {
             SelectedItem(itemId.ToString());
-        }
-
-        [Export("Submit")]
-        [JavascriptInterface]
-        public void SubmitVoidResv()
-        {
-            Submit();
         }
     }
 }
