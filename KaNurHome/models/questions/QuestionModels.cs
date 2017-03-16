@@ -10,21 +10,20 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Xml.Linq;
-using KaNurHome.enums;
-using KaNurHome.models.xmls;
+using KaNurHome.xmls;
+using KaNurHome.models.nursinghomes;
+using KaNurHome.models.hospitals;
 
 namespace KaNurHome.models.questions
 {
-    // 介護タイプ属性絞込みクエスチョンシート
     public class QuestionModels
     {
-        // 対象の介護タイプ属性
-        //public NursingCategories TargetType { get; set; }
-        public NursingTypes TargetType { get; set; }
+
         // ID
         public string ID { get; set; }
         // テキスト
         public string Text { get; set; }
+
 
         // HTML変換
         public XElement ToHTML()
@@ -47,5 +46,18 @@ namespace KaNurHome.models.questions
 
             return divQuestionItem;
         }
+    }
+
+    // 介護タイプ属性絞込みクエスチョンシート
+    public class NursingTypeQuestionModels : QuestionModels
+    {
+        // 対象の介護タイプ属性
+        public NursingTypes TargetType { get; set; }
+
+    }
+    public class HospitalQuestionModels : QuestionModels
+    {
+        public HospitalModels TargetModel { get; set; }
+
     }
 }

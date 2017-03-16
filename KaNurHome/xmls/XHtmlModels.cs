@@ -1,7 +1,7 @@
 using Android.Content;
 using System.Xml.Linq;
 
-namespace KaNurHome.models.xmls
+namespace KaNurHome.xmls
 {
     public abstract class XHtmlModels
     {

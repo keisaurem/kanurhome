@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0D6DE01C-6275-4B09-A97C-AD35E9501D21}</ProjectGuid>
+    <ProjectGuid>{C094D49F-7CB6-44B5-B4CF-589FE77725B5}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -52,12 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="attributes\NursingTypeAttribute.cs" />
-    <Compile Include="attributes\QuestionAttribute.cs" />
+    <Compile Include="AddressSelectActivity.cs" />
     <Compile Include="attributes\CsvColumnAttribute.cs" />
+    <Compile Include="attributes\NursingTypeAttribute.cs" />
     <Compile Include="DetailActivity.cs" />
-    <Compile Include="enums\NursingCategories.cs" />
-    <Compile Include="enums\NursingTypes.cs" />
+    <Compile Include="HospitalSelectActivity.cs" />
     <Compile Include="layout\MyJSInterface.cs" />
     <Compile Include="layout\WebViewWrapper.cs" />
     <Compile Include="ListActivity.cs" />
@@ -65,26 +64,25 @@
     <Compile Include="MapActivity.cs" />
     <Compile Include="models\CsvLoader.cs" />
     <Compile Include="models\GeoMath.cs" />
-    <Compile Include="models\nearplaces\DetailDataBuilder.cs" />
-    <Compile Include="models\nearplaces\HospitalModels.cs" />
-    <Compile Include="models\nearplaces\INearPlaces.cs" />
+    <Compile Include="models\hospitals\HospitalModels.cs" />
+    <Compile Include="models\INearPlaces.cs" />
     <Compile Include="models\nursinghomes\NursingHomeModels.cs" />
     <Compile Include="models\questions\QuestionModels.cs" />
     <Compile Include="models\questions\QuestionSheets.cs" />
-    <Compile Include="models\nearplaces\OpenDataShelterModels.cs" />
-    <Compile Include="models\nearplaces\ShelterModels.cs" />
-    <Compile Include="models\xmls\XMapHtml.cs" />
-    <Compile Include="models\xmls\XDetailHtml.cs" />
-    <Compile Include="models\xmls\XHtmlModels.cs" />
-    <Compile Include="models\xmls\XListHtml.cs" />
-    <Compile Include="models\xmls\XAddressHtml.cs" />
-    <Compile Include="models\xmls\XQuestionHtml.cs" />
-    <Compile Include="AddressActivity.cs" />
-    <Compile Include="QuestionActivity.cs" />
+    <Compile Include="models\shelters\ShelterModels.cs" />
+    <Compile Include="NursingHomeSelectActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sharedatas\ShareDatas.cs" />
+    <Compile Include="xmls\XDetailModels.cs" />
+    <Compile Include="xmls\XHtmlModels.cs" />
+    <Compile Include="xmls\XListHtml.cs" />
+    <Compile Include="xmls\XMapHtml.cs" />
+    <Compile Include="xmls\XQuestionHtml.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\csv\hospitals\hospital_01.csv" />
+    <AndroidAsset Include="Assets\csv\hospitals\hospital_02.csv" />
     <AndroidAsset Include="Assets\csv\nursinghomes\DayService.csv" />
     <AndroidAsset Include="Assets\csv\nursinghomes\DayServiceDementia.csv" />
     <AndroidAsset Include="Assets\csv\nursinghomes\DayServiceRehabilitation.csv" />
@@ -103,51 +101,40 @@
     <AndroidAsset Include="Assets\csv\shelters\shelter_01.csv" />
     <AndroidAsset Include="Assets\csv\shelters\shelter_02.csv" />
     <AndroidAsset Include="Assets\csv\shelters\shelter_03.csv" />
-    <AndroidAsset Include="Assets\csv\hospitals\hospital_01.csv" />
-    <AndroidAsset Include="Assets\csv\hospitals\hospital_02.csv" />
-    <None Include="GettingStarted.Xamarin" />
+    <None Include="Resources\AboutResources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\layout\" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\css\common.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\js\common.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\js\gmaps.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\js\jquery-3.1.1.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\js\jquery-ui.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\question.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\list.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\detail.html" />
+    <Folder Include="Resources\layout\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\address.html" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\tutorial.html" />
+    <AndroidAsset Include="Assets\html\detail.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\list.html" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\map.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\question.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\tutorial.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\common.css" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\Dayservice.png" />
@@ -162,7 +149,31 @@
     <AndroidAsset Include="Assets\html\img\Rehabilitation.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidAsset Include="Assets\html\js\common.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\gmaps.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\jquery-3.1.1.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\jquery-ui.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\tuto1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\tuto2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\tuto3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\tuto4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\tuto5.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

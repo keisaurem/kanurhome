@@ -9,41 +9,37 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using KaNurHome.enums;
-using KaNurHome.attributes;
 using KaNurHome.models.nursinghomes;
+using KaNurHome.attributes;
+using KaNurHome.models.hospitals;
 
 namespace KaNurHome.models.questions
 {
-    // QuestionModels‚ÌW‡‘Ì
     public class QuestionSheets
     {
         public QuestionModels[] Models { get; set; }
 
-        public QuestionSheets(params NursingTypes[] attrval)
+        public QuestionSheets(NursingTypes[] targetTypes)
         {
-            if ((attrval == null) || (attrval.Length == 0))
-            {
-                attrval = new NursingCategories[] {
-                    NursingCategories.Helper,
-                    NursingCategories.DayService,
-                    NursingCategories.NursingHome
-                };
-            }
-            this.Models = GetTargetAttributes(attrval).ToArray();
+            this.Models = Enumerable.Range(0, targetTypes.Length)
+                .Select(i => {
+                    var attr = (NursingTypeAttribute)Attribute.GetCustomAttribute(
+                        typeof(NursingTypes).GetField(targetTypes[i].ToString()), typeof(NursingTypeAttribute));
+                    return new NursingTypeQuestionModels() { ID = (i + 1).ToString(), TargetType = targetTypes[i], Text = attr.Text };
+                }).ToArray();
         }
 
-        public QuestionSheets(params NursingCategories[] attrval)
+        public QuestionSheets(HospitalModels[] models)
         {
-            if ((attrval == null) || (attrval.Length == 0))
-            {
-                attrval = new NursingCategories[] {
-                    NursingCategories.Helper,
-                    NursingCategories.DayService,
-                    NursingCategories.NursingHome
-                };
-            }
-            this.Models = GetTargetAttributes(attrval).ToArray();
+            var q = Enumerable.Range(0, models.Length)
+                .Select(i =>
+                {
+                    return new HospitalQuestionModels() { ID = (i + 1).ToString(), TargetModel = models[i], Text = models[i].Name };
+                }).ToList();
+
+            //q.Insert(0, new HospitalQuestionModels { ID = "-1", Text = "“Á‚É‚È‚µ" });
+
+            this.Models = q.ToArray();
         }
 
         public QuestionSheets(NursingHomeModels[] models)
@@ -70,26 +66,10 @@ namespace KaNurHome.models.questions
                 {
                     return new QuestionModels
                     {
-                        ID  = (i + 1).ToString(),
-                        Text = addresses[i],
-                        TargetType = 0
+                        ID = (i + 1).ToString(),
+                        Text = addresses[i]
                     };
                 }).ToArray();
-        }
-
-        private IEnumerable<QuestionModels> GetTargetAttributes(NursingCategories[] attrval)
-        {
-            for (var i = 0; i < attrval.Length; ++i)
-            {
-                var targetField = typeof(NursingCategories).GetField(attrval[i].ToString());
-                var targetAttr = (QuestionAttribute)Attribute.GetCustomAttribute(targetField, typeof(QuestionAttribute));
-                yield return new QuestionModels
-                {
-                    ID = "Q" + (i + 1),
-                    Text = targetAttr.QuestionString,
-                    TargetType = attrval[i]
-                };
-            }
         }
     }
 }

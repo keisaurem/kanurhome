@@ -12,13 +12,13 @@ using Android.Widget;
 using KaNurHome.models.nursinghomes;
 using System.Xml.Linq;
 
-namespace KaNurHome.models.xmls
+namespace KaNurHome.xmls
 {
     public class XListHtml : XHtmlModels
     {
         public XListHtml(Context context) : base(context) { }
 
-        public void SetKeywords(string[] keywords, List<string> areaname)
+        public void SetKeywords(string[] keywords/* , List<string> areaname */)
         {
             var target = base.HtmlSource.Root.Descendants()
                 .Single(m => m.Attribute("id") != null && m.Attribute("id").Value == "content_top");
@@ -43,28 +43,28 @@ namespace KaNurHome.models.xmls
             xWrap.Add(xButtons);
 
 
-            var xWrapArea = new XElement("div");
-            xWrapArea.SetAttributeValue("id", "wrap_area");
-            xWrapArea.SetAttributeValue("class", "pad_15 ovhid");
+            //var xWrapArea = new XElement("div");
+            //xWrapArea.SetAttributeValue("id", "wrap_area");
+            //xWrapArea.SetAttributeValue("class", "pad_15 ovhid");
 
-            var xTitleArea = new XElement("div");
-            xTitleArea.Value = "iž‚ÝƒGƒŠƒA";
-            xTitleArea.SetAttributeValue("class", "margB_10");
+            //var xTitleArea = new XElement("div");
+            //xTitleArea.Value = "iž‚ÝƒGƒŠƒA";
+            //xTitleArea.SetAttributeValue("class", "margB_10");
 
-            var xButtonAreas = areaname.Select(m =>
-            {
-                var xButtonArea = new XElement("div");
-                xButtonArea.SetAttributeValue("class", "toggle_button");
-                xButtonArea.Value = m;
-                return xButtonArea;
-            }).ToArray();
+            //var xButtonAreas = areaname.Select(m =>
+            //{
+            //    var xButtonArea = new XElement("div");
+            //    xButtonArea.SetAttributeValue("class", "toggle_button");
+            //    xButtonArea.Value = m;
+            //    return xButtonArea;
+            //}).ToArray();
 
 
-            xWrapArea.Add(xTitleArea);
-            xWrapArea.Add(xButtonAreas);
+            //xWrapArea.Add(xTitleArea);
+            //xWrapArea.Add(xButtonAreas);
 
             target.Add(xWrap);
-            target.Add(xWrapArea);
+            //target.Add(xWrapArea);
         }
 
         public void SetListItems(NursingHomeModels[] models)

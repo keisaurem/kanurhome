@@ -11,7 +11,7 @@ using Android.Views;
 using Android.Widget;
 using System.Xml.Linq;
 
-namespace KaNurHome.models.nearplaces
+namespace KaNurHome.models
 {
     public interface INearPlaces
     {
@@ -20,7 +20,6 @@ namespace KaNurHome.models.nearplaces
         double LatVal { get; }
         double LngVal { get; }
     }
-
     public static class NearPlaces
     {
 
@@ -30,7 +29,7 @@ namespace KaNurHome.models.nearplaces
 
             var xName = new XElement("td");
             xName.SetAttributeValue("class", "margB_5 font_m");
-            xName.SetAttributeValue("style" , "width: 80%;");
+            xName.SetAttributeValue("style", "width: 80%;");
             xName.Value = model.Name;
 
             var xDistance = new XElement("td");

@@ -9,15 +9,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using KaNurHome.models.nearplaces;
 using KaNurHome.models.nursinghomes;
 
-namespace KaNurHome.models.xmls
+namespace KaNurHome.xmls
 {
     public class XMapHtml : XHtmlModels
     {
         public XMapHtml(Context context) : base(context) { }
-        
+
         public void SetSelectedItem(NursingHomeModels model)
         {
             var target = base.HtmlSource.Root.Descendants()

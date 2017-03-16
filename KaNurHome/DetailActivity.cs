@@ -9,10 +9,13 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using KaNurHome.models.layouts;
-using KaNurHome.models.nearplaces;
+using KaNurHome.models;
 using KaNurHome.models.nursinghomes;
-using KaNurHome.models.xmls;
+using KaNurHome.models.shelters;
+using KaNurHome.sharedatas;
+using KaNurHome.models.hospitals;
+using KaNurHome.xmls;
+using KaNurHome.models.layouts;
 
 namespace KaNurHome
 {
@@ -26,25 +29,22 @@ namespace KaNurHome
         {
             base.OnCreate(savedInstanceState);
 
-
             // –hÐŽ{ÝŽæ“¾
-            INearPlaces[] shelters = ShelterModels.GetModels(Application.Context)
-                .Where(m => FilteringShelters(m, ListActivity.SelectedItem)).OrderBy(m => m.Distance).ToArray();
-            INearPlaces[] openShelters = OpenDataShelterModels.GetModels(Application.Context)
-                .Where(m => FilteringShelters(m, ListActivity.SelectedItem)).OrderBy(m => m.Distance).ToArray();
-
+            var shelters = ShelterModels.GetModels(Application.Context)
+                .Where(m => FilteringShelters(m, ShareDatas.SelectedNursingHome)).OrderBy(m => m.Distance).ToArray();
             // •a‰@Žæ“¾
-            var hospitals = HospitalModels.GetModels(Application.Context)
-                .Where(m => FilteringShelters(m, ListActivity.SelectedItem)).OrderBy(m => m.Distance).ToArray();
+            var hospitals = HospitalModels.GetBigHospitalModels(Application.Context).Concat(HospitalModels.GetSmallHospitalModels(Application.Context))
+                .Where(m => FilteringShelters(m, ShareDatas.SelectedNursingHome)).OrderBy(m => m.Distance).ToArray();
+
 
             // Html
             var xDetail = new XDetailHtml(Application.Context);
 
-            xDetail.SetSelectedItem(ListActivity.SelectedItem);
+            xDetail.SetSelectedItem(ShareDatas.SelectedNursingHome);
             xDetail.SetHospitalDatas(hospitals);
-            xDetail.SetShelterDatas(shelters.Concat(openShelters).ToArray());
+            xDetail.SetShelterDatas(shelters);
 
-            lay.JSInterface.SelectedItem += itemID => {
+            lay.JSInterface.RaiseSubmit += () => {
                 var intent = new Intent(Application.Context, typeof(MapActivity));
                 StartActivity(intent);
             };
@@ -52,7 +52,6 @@ namespace KaNurHome
             SetContentView(lay.Layout);
             lay.SetHtml(xDetail);
         }
-
         // ƒtƒBƒ‹ƒ^ƒŠƒ“ƒO
         private bool FilteringShelters(INearPlaces near, NursingHomeModels nurse)
         {

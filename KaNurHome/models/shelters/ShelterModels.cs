@@ -11,16 +11,18 @@ using Android.Views;
 using Android.Widget;
 using KaNurHome.attributes;
 
-namespace KaNurHome.models.nearplaces
+namespace KaNurHome.models.shelters
 {
-    public class HospitalModels : INearPlaces
+    public class ShelterModels : INearPlaces
     {
-        [CsvColumn("Ž{Ý–¼")]
-        public string Name { get; set; }
+        [CsvColumn("ID")]
+        public string ID { get; set; }
         [CsvColumn("ˆÜ“x")]
         public string Lat { get; set; }
         [CsvColumn("Œo“x")]
         public string Lng { get; set; }
+        [CsvColumn("–¼Ì")]
+        public string Name { get; set; }
 
         public double Distance { get; set; }
 
@@ -44,12 +46,11 @@ namespace KaNurHome.models.nearplaces
             }
         }
 
-        public static HospitalModels[] GetModels(Context context)
+        public static ShelterModels[] GetModels(Context context)
         {
 
             var csvNames = new string[] {
-                "csv/hospitals/hospital_01.csv",
-                "csv/hospitals/hospital_02.csv"
+                "csv/shelters/14hinan.csv"
             };
 
             var shelterSources = csvNames.AsParallel().SelectMany(m =>
@@ -57,10 +58,10 @@ namespace KaNurHome.models.nearplaces
                 using (var am = context.Resources.Assets.Open(m))
                 {
                     var dict = CsvLoader.GetCsvDictionaly(am);
-                    var ret = new List<HospitalModels>();
+                    var ret = new List<ShelterModels>();
                     for (var i = 0; i < dict.First().Value.Count; ++i)
                     {
-                        var model = new HospitalModels();
+                        var model = new ShelterModels();
                         var members = model.GetType().GetProperties();
                         foreach (var mem in members)
                         {

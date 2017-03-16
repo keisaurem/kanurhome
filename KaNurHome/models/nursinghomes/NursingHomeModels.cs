@@ -9,13 +9,93 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using KaNurHome.enums;
 using KaNurHome.attributes;
 using System.Xml.Linq;
-using KaNurHome.models.xmls;
+using KaNurHome.xmls;
 
 namespace KaNurHome.models.nursinghomes
 {
+    // ‰îŒìí•Ê
+    public enum NursingTypes
+    {
+        [NursingType(
+            "–K–âŠÅŒì",
+            "csv/nursinghomes/VisitingNurse.csv",
+            "file:///android_asset/html/img/Helper.png")]
+        VisitingNurse,
+
+        [NursingType(
+            "–K–â‰îŒì",
+            "csv/nursinghomes/VisitingCare.csv",
+            "file:///android_asset/html/img/Helper.png")]
+        VisitingCare,
+
+        [NursingType(
+            "–K–â“ü—‰îŒì",
+            "csv/nursinghomes/VisitingBathCare.csv",
+            "file:///android_asset/html/img/Helper.png")]
+        VisitingBathCare,
+
+        [NursingType(
+            "–K–âƒŠƒnƒrƒŠƒe[ƒVƒ‡ƒ“",
+            "csv/nursinghomes/VisitingRehabilitation.csv",
+            "file:///android_asset/html/img/Rehabilitation.png")]
+        VisitingRehabilitation,
+
+        [NursingType(
+            "’ÊŠƒŠƒnƒrƒŠƒe[ƒVƒ‡ƒ“",
+            "csv/nursinghomes/DayServiceRehabilitation.csv",
+            "file:///android_asset/html/img/Rehabilitation.png")]
+        DayServiceRehabilitation,
+
+        [NursingType(
+            "’ÊŠ‰îŒì",
+            "csv/nursinghomes/DayService.csv",
+            "file:///android_asset/html/img/Dayservice.png")]
+        DayService,
+
+        [NursingType(
+            "’nˆæ–§’…Œ^’ÊŠ‰îŒì",
+            "csv/nursinghomes/DayServiceSmall.csv",
+            "file:///android_asset/html/img/Dayservice.png")]
+        DayServiceSmall,
+
+        [NursingType(
+            "“Á•Ê—{Œì˜Vlƒz[ƒ€",
+            "csv/nursinghomes/NursingHomeSpecial.csv",
+            "file:///android_asset/html/img/NursingHome.png")]
+        NursingHomeSpecial,
+
+        [NursingType(
+            "‰îŒì˜Vl•ÛŒ’{İ",
+            "csv/nursinghomes/NursingHome.csv",
+            "file:///android_asset/html/img/NursingHome.png")]
+        NursingHome,
+
+        [NursingType(
+            "”F’mÇ‘Î‰Œ^’ÊŠ‰îŒì",
+            "csv/nursinghomes/DayServiceDementia.csv",
+            "file:///android_asset/html/img/Dayservice.png")]
+        DayServiceDementia,
+
+        [NursingType(
+            "”F’mÇ‘Î‰Œ^‹¤“¯¶Šˆ‰îŒì",
+            "csv/nursinghomes/NursingHomeDementia.csv",
+            "file:///android_asset/html/img/NursingHome.png")]
+        NursingHomeDementia,
+
+        [NursingType(
+            "’ZŠú“üŠŒ^—Ã—{‰îŒì(•a‰@)",
+            "csv/nursinghomes/NursingHomeShortTimeHospital.csv",
+            "file:///android_asset/html/img/NursingHome.png")]
+        NursingHomeShortTimeHospital,
+
+        [NursingType(
+            "’ZŠú“üŠ—Ã—{‰îŒì(˜Vl•ÛŒ’{İ)",
+            "csv/nursinghomes/NursingHomeShortTime.csv",
+            "file:///android_asset/html/img/NursingHome.png")]
+        NursingHomeShortTime
+    }
     public class NursingHomeModels
     {
         public NursingTypes Type { get; set; }
@@ -35,6 +115,41 @@ namespace KaNurHome.models.nursinghomes
 
         public int Rating { get; set; }
 
+
+        public static NursingHomeModels[] GetModels(Context context, List<NursingTypes> types)
+        {
+            var sources = types.AsParallel().Select(m =>
+            {
+                var f = typeof(NursingTypes).GetField(m.ToString());
+                var attr = (NursingTypeAttribute)Attribute.GetCustomAttribute(f, typeof(NursingTypeAttribute));
+                return new Tuple<NursingTypes, string>((NursingTypes)f.GetValue(null), attr.CsvName);
+            });
+
+            var shelterSourcve = sources.AsParallel().SelectMany(m =>
+            {
+                using (var am = context.Resources.Assets.Open(m.Item2))
+                {
+                    var dict = CsvLoader.GetCsvDictionaly(am);
+                    var ret = new List<NursingHomeModels>();
+                    for (var i = 0; i < dict.First().Value.Count; ++i)
+                    {
+                        var model = new NursingHomeModels();
+                        var members = model.GetType().GetProperties();
+                        foreach (var mem in members)
+                        {
+                            var memAttr = (CsvColumnAttribute)Attribute.GetCustomAttribute(mem, typeof(CsvColumnAttribute));
+                            if (memAttr == null) continue;
+                            model.GetType().GetProperty(mem.Name).SetValue(model, dict[memAttr.Column][i]);
+                        }
+                        model.Type = m.Item1;
+                        ret.Add(model);
+                    }
+                    return ret;
+                }
+            }).GroupBy(m => m.ID).Select(m => m.First());
+
+            return shelterSourcve.ToArray();
+        }
 
         public XElement ToHtml()
         {
@@ -73,9 +188,7 @@ namespace KaNurHome.models.nursinghomes
             xName.SetAttributeValue("class", "font_l margB_15 nursinghomename");
             if (writecolor) xName.SetAttributeValue("style", "color:#fff;");
             xName.Value = this.Name;
-
-            //var xPost = new XElement("div");
-            //xPost.Value = this.Post;
+            
             var xType = new XElement("div");
             xType.SetAttributeValue("class", "margB_10");
             if (writecolor) xType.SetAttributeValue("style", "color:#fff;");
@@ -92,15 +205,8 @@ namespace KaNurHome.models.nursinghomes
             var xRating = new XElement("div");
             xRating.SetAttributeValue("class", "margT_10 font_s");
             if (writecolor) xRating.SetAttributeValue("style", "color:#fff;");
-
-            if (typeAttr.Categories.Contains(NursingCategories.Helper))
-            {
-                xRating.Value = "–K–â‰îŒì‚Ì‚½‚ßA–hĞ•]‰¿‚Í‚ ‚è‚Ü‚¹‚ñ";
-            }
-            else
-            {
-                xRating.Value = "–hĞ•]‰¿ " + new string(Enumerable.Range(0, this.Rating).Select(m => 'š').ToArray());
-            }
+            
+            xRating.Value = "–hĞ•]‰¿ " + new string(Enumerable.Range(0, this.Rating).Select(m => 'š').ToArray());
 
             xCell2.Add(xName, xType, xAddress, xTel, xRating);
 
@@ -110,74 +216,6 @@ namespace KaNurHome.models.nursinghomes
 
             return xWrapDatas;
         }
-
-        //public static NursingHomeModels[] GetModels(Context context)
-        //{
-        //    var sources = typeof(NursingTypes).GetFields().AsParallel().Where(m => m.IsStatic).Select(m =>
-        //    {
-        //        var attr = (NursingTypeAttribute) Attribute.GetCustomAttribute(m, typeof(NursingTypeAttribute));
-        //        return new Tuple<NursingTypes, string>((NursingTypes)m.GetValue(null), attr.CsvName);
-        //    });
-        //    var shelterSourcve = sources.AsParallel().SelectMany(m =>
-        //    {
-        //        using (var am = context.Resources.Assets.Open(m.Item2))
-        //        {
-        //            var dict = CsvLoader.GetCsvDictionaly(am);
-        //            var ret = new List<NursingHomeModels>();
-        //            for (var i = 0; i < dict.First().Value.Count; ++i)
-        //            {
-        //                var model = new NursingHomeModels();
-        //                var members = model.GetType().GetProperties();
-        //                foreach (var mem in members)
-        //                {
-        //                    var memAttr = (CsvColumnAttribute) Attribute.GetCustomAttribute(mem, typeof(CsvColumnAttribute));
-        //                    if (memAttr == null) continue;
-        //                    model.GetType().GetProperty(mem.Name).SetValue(model, dict[memAttr.Column][i]);
-        //                }
-        //                model.Type = m.Item1;
-        //                ret.Add(model);
-        //            }
-        //            return ret;
-        //        }
-        //    }).GroupBy(m => m.ID).Select(m => m.First());
-
-        //    return shelterSourcve.ToArray();
-        //}
-
-        public static NursingHomeModels[] GetModels(Context context, NursingTypes[] types)
-        {
-            var sources = types.AsParallel().Select(m =>
-            {
-                var f = typeof(NursingTypes).GetField(m.ToString());
-                var attr = (NursingTypeAttribute)Attribute.GetCustomAttribute(f, typeof(NursingTypeAttribute));
-                return new Tuple<NursingTypes, string>((NursingTypes)f.GetValue(null), attr.CsvName);
-            });
-            var shelterSourcve = sources.AsParallel().SelectMany(m =>
-            {
-                using (var am = context.Resources.Assets.Open(m.Item2))
-                {
-                    var dict = CsvLoader.GetCsvDictionaly(am);
-                    var ret = new List<NursingHomeModels>();
-                    for (var i = 0; i < dict.First().Value.Count; ++i)
-                    {
-                        var model = new NursingHomeModels();
-                        var members = model.GetType().GetProperties();
-                        foreach (var mem in members)
-                        {
-                            var memAttr = (CsvColumnAttribute)Attribute.GetCustomAttribute(mem, typeof(CsvColumnAttribute));
-                            if (memAttr == null) continue;
-                            model.GetType().GetProperty(mem.Name).SetValue(model, dict[memAttr.Column][i]);
-                        }
-                        model.Type = m.Item1;
-                        ret.Add(model);
-                    }
-                    return ret;
-                }
-            }).GroupBy(m => m.ID).Select(m => m.First());
-
-            return shelterSourcve.ToArray();
-        }
-
 
         public XElement ToLatLngHtml()
         {

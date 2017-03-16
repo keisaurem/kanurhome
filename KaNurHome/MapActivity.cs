@@ -10,7 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using KaNurHome.models.layouts;
-using KaNurHome.models.xmls;
+using KaNurHome.xmls;
 
 namespace KaNurHome
 {
@@ -25,7 +25,7 @@ namespace KaNurHome
             base.OnCreate(savedInstanceState);
 
             var xMap = new XMapHtml(Application.Context);
-            xMap.SetSelectedItem(ListActivity.SelectedItem);
+            xMap.SetSelectedItem(sharedatas.ShareDatas.SelectedNursingHome);
 
             SetContentView(lay.Layout);
             lay.SetHtml(xMap);

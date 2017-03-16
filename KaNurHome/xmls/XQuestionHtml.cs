@@ -11,11 +11,13 @@ using Android.Views;
 using Android.Widget;
 using KaNurHome.models.questions;
 
-namespace KaNurHome.models.xmls
+namespace KaNurHome.xmls
 {
     // question.html controller
     public class XQuestionHtml : XHtmlModels
     {
+        public const string DEFAULT_ITEM_ID = "none_answer";
+
         public XQuestionHtml(Context context) : base(context) { }
 
         public void SetQuestionItems(QuestionSheets sheet)
@@ -25,11 +27,18 @@ namespace KaNurHome.models.xmls
             target.Add(sheet.Models.Select(m => m.ToHTML()).ToArray());
         }
 
-        public void VisibleExecSearch()
+        public void SetTitle(string text)
         {
             var target = base.HtmlSource.Root.Descendants()
-                   .Single(m => m.Attribute("id") != null && m.Attribute("id").Value == "exec_search");
-            target.Attribute("class").Value = "margT_20";
+                .Single(m => m.Attribute("id") != null && m.Attribute("id").Value == "question_title");
+            target.Add(text);
+        }
+
+        public void HiddenDefaultItem()
+        {
+            var target = base.HtmlSource.Root.Descendants()
+                .Single(m => m.Attribute("id") != null && m.Attribute("id").Value == DEFAULT_ITEM_ID);
+            target.SetAttributeValue("class", "disnon");
         }
 
         protected override string GetHtmlFileName()

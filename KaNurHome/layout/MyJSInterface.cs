@@ -9,6 +9,8 @@ namespace KaNurHome.models.layouts
     {
         public delegate void SelectItem(string itemId);
         public event SelectItem SelectedItem;
+        public delegate void SubmitEvdeg();
+        public event SubmitEvdeg RaiseSubmit;
 
         private Context _context;
         public MyJSInterface(Context context)
@@ -29,6 +31,12 @@ namespace KaNurHome.models.layouts
         public void SelectItemID(Java.Lang.String itemId)
         {
             SelectedItem(itemId.ToString());
+        }
+        [Export("Submit")]
+        [JavascriptInterface]
+        public void Submit()
+        {
+            RaiseSubmit();
         }
     }
 }

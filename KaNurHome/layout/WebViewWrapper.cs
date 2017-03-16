@@ -2,7 +2,7 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using Android.Webkit;
-using KaNurHome.models.xmls;
+using KaNurHome.xmls;
 
 namespace KaNurHome.models.layouts
 {

@@ -10,18 +10,20 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using KaNurHome.models.layouts;
-using KaNurHome.models.xmls;
+using KaNurHome.xmls;
 using KaNurHome.models.nursinghomes;
-using KaNurHome.enums;
+using KaNurHome.sharedatas;
+using System.Threading.Tasks;
+using KaNurHome.models;
+using System.Collections;
+using KaNurHome.models.shelters;
 using KaNurHome.attributes;
-using KaNurHome.models.nearplaces;
 
 namespace KaNurHome
 {
     [Activity(Label = "ListActivity")]
     public class ListActivity : Activity
     {
-        public static NursingHomeModels SelectedItem { get; set; } = null;
         //レイアウト
         private WebViewWrapper lay = new WebViewWrapper(Application.Context);
 
@@ -29,56 +31,60 @@ namespace KaNurHome
         {
             base.OnCreate(savedInstanceState);
 
-            var xList = new XListHtml(Application.Context);
+            IEnumerable<NursingHomeModels> nursinghomes = NursingHomeModels.GetModels(Application.Context, ShareDatas.SelectedNursingTypes);
 
-            // 結果
-            var resultTypes = typeof(NursingTypes).GetFields().Where(m => m.IsStatic)
-                .Select(m => new
+            if (ShareDatas.SelectedHospitalModels.Count != 0)
+            {
+                var lstNursings = new List<NursingHomeModels>();
+                Parallel.ForEach(ShareDatas.SelectedHospitalModels, item =>
                 {
-                    val = (NursingTypes)m.GetValue(null),
-                    attr = (NursingTypeAttribute)Attribute.GetCustomAttribute(m, typeof(NursingTypeAttribute))
-                })
-                .Where(m => m.attr.Categories.Where(c => QuestionActivity.SelectedItems.Contains(c)).Count() == QuestionActivity.SelectedItems.Count())
-                .Select(m => m.val).ToArray();
+                    var items = nursinghomes.Where(m =>
+                    {
+                        double nlat = 0, nlng = 0;
+                        if (!(double.TryParse(m.Lat, out nlat) && double.TryParse(m.Lng, out nlng)))
+                        {
+                            return false;
+                        }
+                        return GeoMath.calcDistHubeny(item.LatVal, item.LngVal, nlat, nlng) < 1000;
+                    });
+                    lock (((ICollection)lstNursings).SyncRoot)
+                    {
+                        lstNursings.AddRange(items);
+                    }
+                });
+                nursinghomes = lstNursings;
+            }
 
-            // キーワード
-            var keywords = QuestionActivity.SelectedItems
-                .Select(m =>
-                {
-                    var attr = (QuestionAttribute)Attribute.GetCustomAttribute(
-                        typeof(NursingCategories).GetField(m.ToString()),
-                        typeof(QuestionAttribute));
-                    return attr.QuestionString;
-                }).ToArray();
+            if (ShareDatas.Addresses.Count != 0)
+                nursinghomes = nursinghomes.Where(m => ShareDatas.Addresses.Where(n => m.Address.Contains(n)).Count() > 0);
 
-
-            // 防災施設取得
             var shelters = ShelterModels.GetModels(Application.Context);
-            var openShelters = OpenDataShelterModels.GetModels(Application.Context);
 
-            var nursinghomes = NursingHomeModels.GetModels(Application.Context, resultTypes)
-                .Where(m => AddressActivity.SelectedAddress.Where(n => m.Address.Contains(n)).Count() > 0)
-                //.Where(m => m.Address.Contains(AddressActivity.SelectedAddress))
-                .AsParallel().Select(m =>
-                {
-                    // 半径1KM内の施設を数えてレーティング付け
-                    var shelcount = shelters.Where(n => FilteringShelters(n ,m)).Count();
-                    var odshelcount = openShelters.Where(n => FilteringShelters(n, m)).Count();
+            Parallel.ForEach(nursinghomes, item =>
+            {
+                var shelcount = shelters.Where(n => FilteringShelters(n, item)).Count();
+                var rate = (short)(shelcount);
+                if (shelcount == 0) rate = 0;
+                item.Rating = rate;
+            });
+            nursinghomes = nursinghomes.OrderByDescending(m => m.Rating).Distinct();
 
-                    var ratebase = shelcount + odshelcount;
+            var xList = new XListHtml(Application.Context);
+            var keywords = ShareDatas.SelectedNursingTypes.Select(m =>
+            {
+                var attr = (NursingTypeAttribute)Attribute.GetCustomAttribute(
+                    typeof(NursingTypes).GetField(m.ToString()), typeof(NursingTypeAttribute));
+                return attr.Text;
+            }).Concat(ShareDatas.SelectedHospitalModels.Select(m => m.Name)).Concat(ShareDatas.Addresses).ToArray();
 
-                    var rate = (short)(ratebase / 5);
-                    if (ratebase == 0) rate = 0;
+            xList.SetListItems(nursinghomes.ToArray());
+            xList.SetKeywords(keywords);
 
-                    m.Rating = rate;
-
-                    return m;
-                }).OrderByDescending(m => m.Rating).ToArray();
-
-            xList.SetKeywords(keywords, AddressActivity.SelectedAddress);
-            xList.SetListItems(nursinghomes);
-
-            lay.JSInterface.SelectedItem += itemID => JS_Handler(itemID, nursinghomes);
+            lay.JSInterface.SelectedItem += itemID => {
+                ShareDatas.SelectedNursingHome = nursinghomes.Single(m => m.ID == itemID);
+                var intent = new Intent(Application.Context, typeof(DetailActivity));
+                StartActivity(intent);
+            };
 
             SetContentView(lay.Layout);
             lay.SetHtml(xList);
@@ -92,14 +98,7 @@ namespace KaNurHome
             {
                 return false;
             }
-            return (int)models.GeoMath.calcDistHubeny(near.LatVal, near.LngVal, nlat, nlng) < 1000;
-        }
-
-        public void JS_Handler(string itemID, NursingHomeModels[] models)
-        {
-            SelectedItem = models.Single(m => m.ID == itemID);
-            var intent = new Intent(Application.Context, typeof(DetailActivity));
-            StartActivity(intent);
+            return (int)models.GeoMath.calcDistHubeny(near.LatVal, near.LngVal, nlat, nlng) < 500;
         }
     }
 }

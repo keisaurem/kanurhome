@@ -7,21 +7,64 @@
     <script type="text/javascript" src="file:///android_asset/html/js/common.js"></script>
 
     <style type="text/css">
+        body{
+            padding-bottom: 100px;
+        }
         .card_button{
             width: 80%;
-            margin: 5%;
-            padding: 5%;
+            margin: 10px 5%;
+            padding: 10px 5%;
+        }
+        #foot_button{
+            width: 100%;
+            background-color: #27ae60;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            color: #fff;
+            box-shadow : 0px -5px 5px #bbb;
+            z-index: 10;
+            text-align: center;
+        }
+        .selected_item {
+            background-color: #d35400;
+            color: #fff;
         }
     </style>
     <script type="text/javascript">
         $(function () {
 
             $(document).on("mousedown", ".card_button", function (e) {
-                $this = $(this);
+                var $this = $(this);
+                var $id = $this.attr("id");
+                if ($id == "none_answer") {
+                    animateRipple($this, e,
+                        function () {
+                            // callback
+                            //Android.SelectItem($this.attr("id"));
+                            Android.Submit();
+                        });
+                } else {
+                    if ($this.hasClass("selected_item")) {
+                        $this.removeClass("selected_item");
+                    } else {
+                        $this.addClass("selected_item");
+                    }
+                    Android.SelectItem($id);
+                }
+            });
+
+            $(document).on("mousedown", "#foot_button", function (e) {
+                var $this = $(this);
+                if ($(".selected_item").length == 0) {
+                    Android.ViewToast("エリアを1つ以上選択してください");
+                    return;
+                }
                 animateRipple($this, e,
                     function () {
                         // callback
-                        Android.SelectItem($this.attr("id"));
+                        //Android.SelectItem($this.attr("id"));
+                        Android.Submit();
                     }
                 );
             });
@@ -33,21 +76,26 @@
 <body>
     <div id="content_top">
         <div id="wrap_question" class="pad_20">
-            <div id="question_title">次のうちから1つ、選択してください</div>
+            <div id="question_title"></div>
         </div>
     </div>
     <div id="content_main">
         <div id="wrap_answers">
 
-        </div>
-        <div id="exec_search" class="disnon">
-            <div id="255" class="card_button ripple_target margB_20 color_main">
-                <div class="pad_15">
-                    <div class="font_x">今まで選択した条件で検索する</div>
+            <div id="none_answer" class="card_button ripple_target margB_20 text_center">
+                <div class="pad_5">
+                    <div class="font_x qtext">
+                        指定なし
+                    </div>
                 </div>
                 <span class="ripple_effect"></span>
             </div>
+
         </div>
+    </div>
+    <div id="foot_button" class="ripple_target">
+        <div class="font_x pad_20">この種類で選択する</div>
+        <span class="ripple_effect"></span>
     </div>
 </body>
 </html>
